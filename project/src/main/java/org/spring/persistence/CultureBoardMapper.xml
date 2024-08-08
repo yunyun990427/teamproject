@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <!-- BoardMapper 인터페이스를 구현한다는 의미 --> 
+  <mapper namespace="org.spring.persistence.CultureBoardMapper">
+ 	
+ 	<!-- <select id="selectList" resultType="org.spring.domain.CultureBoardDTO">
+ 		SELECT * FROM practice_culture_board
+ 	</select> -->
+	
+	<!-- 페이지 수 산출용(?) 전체 게시물 수 계산 -->
+	<select id="selectTotalCount" resultType="int">
+		SELECT COUNT(*) FROM culture_board
+	</select>
+	
+	<!-- 북마크 기능 -->
+	<insert id="bookmark">
+		INSERT INTO bookmark_culture_board (culture_bno, user_num, culture_classify, culture_title, culture_place) VALUES (#{culture_bno},#{user_num},#{culture_classify},#{culture_title},#{culture_place})
+	</insert>
+	
+	<!-- 북마크 취소 -->
+	<delete id="bookmarkDel">
+		DELETE FROM bookmark_culture_board WHERE culture_bno = #{culture_bno} AND user_num = #{user_num}
+	</delete>
+	
+	<!-- 게시글의 스크랩 수 -->
+	<select id="bookmarkChk" resultType="int">
+		SELECT COUNT(*) FROM bookmark_culture_board WHERE culture_bno = #{culture_bno} AND user_num = #{user_num}
+	</select>
+	
+	<select id="getTotalCount" resultType="int" parameterType="org.spring.domain.culture.Criteria">
+    SELECT COUNT(culture_bno)
+    FROM culture_board
+    <where>
+        <!-- Handle area condition -->
+        <if test="area != null and area != ''">
+            culture_area LIKE CONCAT("%", #{area}, "%")
+        </if>
+
+        <!-- Handle classify condition -->
+        <if test="classify != null and classify != ''">
+            <if test="area != null and area != ''">
+                AND culture_classify LIKE CONCAT("%", #{classify}, "%")
+            </if>
+            <if test="area == null or area == ''">
+                culture_classify LIKE CONCAT("%", #{classify}, "%")
+            </if>
+        </if>
+
+        <!-- Handle type and keyword conditions -->
+        <if test="type != null and keyword != null and type != '' and keyword != ''">
+            <if test="area != null and area != '' or classify != null and classify != ''">
+                AND
+            </if>
+            <choose>
+                <when test="type == 'all'">
+                    (culture_title LIKE CONCAT("%", #{keyword}, "%") OR culture_place LIKE CONCAT("%", #{keyword}, "%"))
+                </when>
+                <otherwise>
+                    ${type} LIKE CONCAT("%", #{keyword}, "%")
+                </otherwise>
+            </choose>
+        </if>
+    </where>
+</select>
+
+	
+		<select id="getListWithSearch" parameterType="org.spring.domain.culture.Criteria" resultType="org.spring.domain.culture.CultureBoardDTO">
+	    SELECT * 
+	    FROM culture_board 
+	    <where>
+	        <!-- Handle area condition -->
+	        <if test="area != null and area != ''">
+	            culture_area LIKE CONCAT("%", #{area}, "%")
+	        </if>
+	
+	        <!-- Handle classify condition -->
+	        <if test="classify != null and classify != ''">
+	            <if test="area != null and area != ''">
+	                AND culture_classify LIKE CONCAT("%", #{classify}, "%")
+	            </if>
+	            <if test="area == null or area == ''">
+	                culture_classify LIKE CONCAT("%", #{classify}, "%")
+	            </if>
+	        </if>
+	
+	        <!-- Handle type and keyword conditions -->
+	        <if test="type != null and keyword != null and type != '' and keyword != ''">
+	            <if test="area != null and area != '' or classify != null and classify != ''">
+	                AND
+	            </if>
+	            <choose>
+	                <when test="type == 'all'">
+	                    (culture_title LIKE CONCAT("%", #{keyword}, "%") OR culture_place LIKE CONCAT("%", #{keyword}, "%"))
+	                </when>
+	                <otherwise>
+	                    ${type} LIKE CONCAT("%", #{keyword}, "%")
+	                </otherwise>
+	            </choose>
+	        </if>
+	    </where>
+	    ORDER BY culture_regdate DESC 
+	    LIMIT #{start}, #{amount}
+	</select>
+	
+	
+	
+	<select id="getBookmarkedPosts" parameterType="int" resultType="org.spring.domain.culture.CultureBoardDTO">
+    	SELECT culture_board.culture_bno, culture_board.culture_classify, culture_board.culture_title, culture_board.culture_place
+    	FROM bookmark_culture_board
+    	INNER JOIN culture_board ON bookmark_culture_board.culture_bno = culture_board.culture_bno
+    	WHERE bookmark_culture_board.user_num = #{user_num}
+	</select>
+	
+	<select id="getUserBookmarks" resultType="org.spring.domain.BookmarkDTO">
+        SELECT *
+        FROM bookmark_culture_board 
+        WHERE user_num = #{user_num}
+    </select>
+	
+  </mapper>

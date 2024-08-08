@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+    <mapper namespace="org.spring.persistence.JobBoardMapper">
+    
+    <!-- db 업데이트시 체크 -->
+    <select id="existsByJoRegistNo" resultType="boolean" parameterType="String">
+        SELECT COUNT(*) > 0
+        FROM job_board
+        WHERE joRegistNo = #{joRegistNo}
+    </select>
+    
+    
+    
+    <select id="getTotalCount" parameterType="org.spring.domain.job.JobCriteria" resultType="int">
+    SELECT COUNT(joRegistNo) FROM job_board
+    <where>
+    	<!-- 근무일 조건 필터링 -->
+        <if test="workDay != null and workDay != '' and workDay != 'all'">
+            AND holidayNm LIKE 
+            <choose>
+            	<when test="workDay == 'three'">
+                    '%주3%'
+                </when>
+            	<when test="workDay == 'four'">
+                    '%주4%'
+                </when>
+                <when test="workDay == 'five'">
+                    '%주5%'
+                </when>
+                <when test="workDay == 'six'">
+                    '%주6%'
+                </when>
+                <when test="workDay == 'etc'">
+                    '%기타%'
+                </when>
+                <when test="workDay == 'all'">
+                    '%'
+                </when>
+            </choose>
+        </if>   	
+    	<!-- 학력조건 필터링 -->
+        <if test="education != null and education != '' and education != 'all'">
+            AND acdmcrNm LIKE 
+            <choose>
+            	<when test="education == 'high'">
+                    '%고등%'
+                </when>
+                <when test="education == 'college'">
+                    '%전문대%'
+                </when>
+                <when test="education == 'univ'">
+                    '%대학_대학교%'
+                </when>
+                <when test="education == 'noEdu'">
+                    '%관계없음%'
+                </when>
+                <when test="education == 'all'">
+                    '%'
+                </when>
+            </choose>
+        </if>
+        <!-- 경력조건 필터링 -->
+        <if test="career != null and career != '' and career != 'all'">
+            AND careerCndNm LIKE 
+            <choose>
+                <when test="career == 'entryLevel'">
+                    '%신입%'
+                </when>
+                <when test="career == 'noExperienceRequired'">
+                    '%무관%'
+                </when>
+                <when test="career == 'experienced'">
+                    '%경력%'
+                </when>
+                <when test="career == 'all'">
+                    '%'
+                </when>
+            </choose>
+        </if>
+        <!-- 급여조건 필터링 -->
+        <if test="wageType != null and wageType != '' and wageType != 'all'">
+            AND hopeWage LIKE 
+            <choose>
+                <when test="wageType == 'hourly'">
+                    '%시급%'
+                </when>
+                <when test="wageType == 'monthly'">
+                    '%월급%'
+                </when>
+                <when test="wageType == 'annual'">
+                    '%연봉%'
+                </when>
+                <when test="wageType == 'all'">
+                    '%'
+                </when>
+            </choose>
+        </if>
+        <!-- 자치구 필터링 -->
+        <if test="district != null and district != ''">
+            AND mngrInsttNm = #{district}
+        </if>
+        <!-- 자치구 필터링 이후 다른 조건 필터링 -->
+        <if test="type != null and keyword != null and type != '' and keyword != ''">
+            <choose>
+                <when test="type == 'all'">
+                    AND (joSj LIKE CONCAT('%', #{keyword}, '%')
+                    OR dtyCn LIKE CONCAT('%', #{keyword}, '%')
+                    OR mngrInsttNm LIKE CONCAT('%', #{keyword}, '%')
+                    OR cmpnyNm LIKE CONCAT('%', #{keyword}, '%')
+                    OR bsnsSumryCn LIKE CONCAT('%', #{keyword}, '%')
+                    OR acdmcrNm LIKE CONCAT('%', #{keyword}, '%')
+                    OR jobcodeNm LIKE CONCAT('%', #{keyword}, '%')
+                    OR careerCndNm LIKE CONCAT('%', #{keyword}, '%')
+                    OR workTimeNm LIKE CONCAT('%', #{keyword}, '%')
+                    OR holidayNm LIKE CONCAT('%', #{keyword}, '%')
+                    OR workPararBassAdresCn LIKE CONCAT('%', #{keyword}, '%'))
+                </when>
+                <otherwise>
+                    AND ${type} LIKE CONCAT('%', #{keyword}, '%')
+                </otherwise>
+            </choose>
+        </if>
+    </where>
+</select>
+
+
+
+<select id="getListWithSearch" parameterType="org.spring.domain.job.JobCriteria" resultType="org.spring.domain.job.JobBoardDTO">
+    SELECT * FROM job_board
+    <where>
+    	<!-- 근무일 조건 필터링 -->
+        <if test="workDay != null and workDay != '' and workDay != 'all'">
+            AND holidayNm LIKE 
+            <choose>
+            	<when test="workDay == 'three'">
+                    '%주3%'
+                </when>
+            	<when test="workDay == 'four'">
+                    '%주4%'
+                </when>
+                <when test="workDay == 'five'">
+                    '%주5%'
+                </when>
+                <when test="workDay == 'six'">
+                    '%주6%'
+                </when>
+                <when test="workDay == 'etc'">
+                    '%기타%'
+                </when>
+                <when test="workDay == 'all'">
+                    '%'
+                </when>
+            </choose>
+        </if> 
+    	<!-- 학력조건 필터링 -->
+        <if test="education != null and education != '' and education != 'all'">
+            AND acdmcrNm LIKE 
+            <choose>
+            	<when test="education == 'high'">
+                    '%고등%'
+                </when>
+                <when test="education == 'college'">
+                    '%전문대%'
+                </when>
+                <when test="education == 'univ'">
+                    '%대학_대학교%'
+                </when>
+                <when test="education == 'noEdu'">
+                    '%관계없음%'
+                </when>
+                <when test="education == 'all'">
+                    '%'
+                </when>
+            </choose>
+        </if>
+        <!-- 경력조건 필터링 -->
+        <if test="career != null and career != '' and career != 'all'">
+            AND careerCndNm LIKE 
+            <choose>
+                <when test="career == 'entryLevel'">
+                    '%신입%'
+                </when>
+                <when test="career == 'noExperienceRequired'">
+                    '%무관%'
+                </when>
+                <when test="career == 'experienced'">
+                    '%경력%'
+                </when>
+                <when test="career == 'all'">
+                    '%'
+                </when>
+            </choose>
+        </if>
+        <!-- 급여조건 필터링 -->
+        <if test="wageType != null and wageType != '' and wageType != 'all'">
+            AND hopeWage LIKE 
+            <choose>
+                <when test="wageType == 'hourly'">
+                    '%시급%'
+                </when>
+                <when test="wageType == 'monthly'">
+                    '%월급%'
+                </when>
+                <when test="wageType == 'annual'">
+                    '%연봉%'
+                </when>
+                <when test="wageType == 'all'">
+                    '%'
+                </when>
+            </choose>
+        </if>
+        <!-- 자치구 필터링 -->
+        <if test="district != null and district != ''">
+            AND mngrInsttNm = #{district}
+        </if>
+        <!-- 자치구 필터링 이후 다른 조건 필터링 -->
+        <if test="type != null and keyword != null and type != '' and keyword != ''">
+            <choose>
+                <when test="type == 'all'">
+                    AND (joSj LIKE CONCAT('%', #{keyword}, '%')
+                    OR dtyCn LIKE CONCAT('%', #{keyword}, '%')
+                    OR mngrInsttNm LIKE CONCAT('%', #{keyword}, '%')
+                    OR cmpnyNm LIKE CONCAT('%', #{keyword}, '%')
+                    OR bsnsSumryCn LIKE CONCAT('%', #{keyword}, '%')
+                    OR acdmcrNm LIKE CONCAT('%', #{keyword}, '%')
+                    OR jobcodeNm LIKE CONCAT('%', #{keyword}, '%')
+                    OR careerCndNm LIKE CONCAT('%', #{keyword}, '%')
+                    OR workTimeNm LIKE CONCAT('%', #{keyword}, '%')
+                    OR holidayNm LIKE CONCAT('%', #{keyword}, '%')
+                    OR workPararBassAdresCn LIKE CONCAT('%', #{keyword}, '%'))
+                </when>
+                <otherwise>
+                    AND ${type} LIKE CONCAT('%', #{keyword}, '%')
+                </otherwise>
+            </choose>
+        </if>
+    </where>
+    ORDER BY joRegDt DESC LIMIT #{start}, #{amount}
+</select>
+
+ 	<insert id="bookmarkJob" parameterType="map">
+	    INSERT INTO job_bookmark_board (joRegistNo, user_num, cmpnyNm, bsnsSumryCn, receptClosNm, hopeWage)
+	    VALUES (#{joRegistNo}, #{user_num}, #{cmpnyNm}, #{bsnsSumryCn}, #{receptClosNm}, #{hopeWage})
+	</insert>
+ 	
+ 	
+ 	
+ 	<insert id="bookmark">
+        INSERT INTO bookmark_job_board (joRegistNo, user_num, cmpnyNm, bsnsSumryCn, receptClosNm, hopeWage) 
+        VALUES (#{joRegistNo}, #{user_num}, #{cmpnyNm}, #{bsnsSumryCn}, #{receptClosNm}, #{hopeWage})
+    </insert>
+
+    <delete id="bookmarkDel">
+        DELETE FROM bookmark_job_board 
+        WHERE joRegistNo = #{joRegistNo} AND user_num = #{user_num}
+    </delete>
+
+    <select id="bookmarkChk" resultType="int">
+        SELECT COUNT(*) 
+        FROM bookmark_job_board 
+        WHERE joRegistNo = #{joRegistNo} AND user_num = #{user_num}
+    </select>
+
+    <select id="getUserBookmarks" resultType="org.spring.domain.BookmarkDTO">
+        SELECT 
+            joRegistNo, 
+            cmpnyNm , 
+            bsnsSumryCn,
+            receptClosNm,
+            hopeWage
+        FROM bookmark_job_board 
+        WHERE user_num = #{user_num}
+    </select>
+    
+    </mapper>

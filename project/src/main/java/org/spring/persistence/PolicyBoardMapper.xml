@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<!-- BoardMapper 인터페이스를 구현한다는 의미 -->
+<mapper namespace="org.spring.persistence.PolicyBoardMapper">
+	
+	<!-- bno serviceID로 찾기 -->
+	<select id="getPolicyBno" resultType="int" parameterType="String">
+	    SELECT policy_bno FROM policy_board WHERE serviceID = #{serviceID}
+	</select>
+
+	<!-- 북마크 기능 -->
+	<insert id="bookmark">
+	    INSERT INTO bookmark_policy_board 
+	    (serviceID, userNum, serviceName, serviceContent, serviceDeadline)
+	    VALUES 
+	    (#{serviceID}, #{userNum}, #{serviceName}, #{serviceContent}, #{serviceDeadline})
+	</insert>
+	
+	<!-- 북마크 취소 -->
+	<delete id="bookmarkDel">
+		DELETE FROM bookmark_policy_board
+    	WHERE serviceID = #{serviceID} AND userNum = #{userNum}
+	</delete>
+	
+	<!-- 게시글의 스크랩 수 -->
+	<select id="bookmarkChk" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+    	FROM bookmark_policy_board
+    	WHERE serviceID = #{serviceID} AND userNum = #{userNum}
+	</select>
+	
+	<select id="getUserBookmarks" resultType="org.spring.domain.BookmarkDTO">
+        SELECT 
+            serviceID,
+            serviceName,
+            serviceContent,
+            serviceDeadline
+        FROM bookmark_policy_board 
+        WHERE userNum = #{userNum}
+        LIMIT 5
+    </select>
+</mapper>

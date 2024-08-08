@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.spring.persistence.CommunityBoardMapper">
+
+	<insert id="insertSelectKey" parameterType="org.spring.domain.community.CommunityBoardDTO">
+		<selectKey keyProperty="community_bno" resultType="int" order="BEFORE">
+			SELECT IFNULL(MAX(community_bno), 0) + 1 FROM community_board
+		</selectKey>
+		INSERT INTO community_board (community_bno, community_title, community_content, community_filename, user_num, writer, region)
+		VALUES (#{community_bno}, #{community_title}, #{community_content}, #{community_filename}, #{user_num}, #{writer}, #{region})
+	</insert>
+
+	<select id="read" parameterType="int" resultType="org.spring.domain.community.CommunityBoardDTO">
+		SELECT * FROM community_board WHERE community_bno = #{community_bno}
+	</select>
+
+
+	<delete id="delete" parameterType="Integer">
+		DELETE FROM community_board WHERE community_bno = #{community_bno}
+	</delete>
+
+	<update id="update" parameterType="org.spring.domain.community.CommunityBoardDTO">
+		UPDATE community_board
+		SET community_title = #{community_title},
+			community_content = #{community_content},
+			community_filename = #{community_filename},
+			user_num = #{user_num},
+			region = #{region}
+		WHERE community_bno = #{community_bno}
+	</update>
+
+
+
+	<select id="getTotal" resultType="int">
+    SELECT count(*) FROM community_board
+</select>
+
+<select id="getTotalCount" parameterType="org.spring.domain.community.Criteria" resultType="int">
+    SELECT COUNT(*)
+    FROM community_board
+    <where>
+        <if test="area != null and area != ''">
+            region = #{area}
+        </if>
+        <if test="type != null and keyword != null and type != '' and keyword != ''">
+            <choose>
+                <when test="type == 'all'">
+                    AND (community_title LIKE CONCAT('%', #{keyword}, '%')
+                    OR community_content LIKE CONCAT('%', #{keyword}, '%')
+                    OR writer LIKE CONCAT('%', #{keyword}, '%')
+                    OR region LIKE CONCAT('%', #{keyword}, '%'))
+                </when>
+                <otherwise>
+                    AND ${type} LIKE CONCAT('%', #{keyword}, '%')
+                </otherwise>
+            </choose>
+        </if>
+    </where>
+</select>
+
+<select id="getListWithPaging" parameterType="org.spring.domain.community.Criteria" resultType="org.spring.domain.community.CommunityBoardDTO">
+    SELECT * FROM community_board
+    <where>
+        <if test="area != null and area != ''">
+            region = #{area}
+        </if>
+        <if test="type != null and keyword != null and type != '' and keyword != ''">
+            <choose>
+                <when test="type == 'all'">
+                    AND (community_title LIKE CONCAT('%', #{keyword}, '%')
+                    OR community_content LIKE CONCAT('%', #{keyword}, '%')
+                    OR writer LIKE CONCAT('%', #{keyword}, '%')
+                    OR region LIKE CONCAT('%', #{keyword}, '%'))
+                </when>
+                <otherwise>
+                    AND ${type} LIKE CONCAT('%', #{keyword}, '%')
+                </otherwise>
+            </choose>
+        </if>
+    </where>
+    ORDER BY community_bno DESC
+    LIMIT #{start}, #{amount}
+</select>
+
+	<update id="updateFileName" parameterType="org.spring.domain.community.CommunityBoardDTO">
+		UPDATE community_board
+		SET community_filename = #{community_filename}
+		WHERE community_bno = #{community_bno}
+	</update>
+	
+
+</mapper>

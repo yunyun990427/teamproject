@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.spring.persistence.ViewCountMapper">
+
+   <select id="checkViewCnt" parameterType="org.spring.domain.community.ViewCountDTO" resultType="int">
+        SELECT COUNT(*) FROM view_count 
+        WHERE view_user_num = #{view_user_num} 
+        AND community_bno = #{community_bno}
+    </select>
+
+    <insert id="insertViewCnt" parameterType="org.spring.domain.community.ViewCountDTO">
+        INSERT INTO view_count (view_user_num, community_bno, view_date) 
+        VALUES (#{view_user_num}, #{community_bno}, NOW())
+    </insert>
+
+    <update id="updateViewCnt" parameterType="int">
+        UPDATE community_board
+        SET community_viewcnt = community_viewcnt + 1
+        WHERE community_bno = #{community_bno}
+    </update>
+    
+</mapper>

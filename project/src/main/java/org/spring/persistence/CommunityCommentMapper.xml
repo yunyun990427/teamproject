@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.spring.persistence.CommunityCommentMapper">
+
+    <insert id="insertComment" parameterType="org.spring.domain.community.CommunityCommentDTO">
+        INSERT INTO community_comment (community_com_content, community_com_regdate, user_num, community_bno , comment_writer)
+        VALUES (#{community_com_content}, NOW(), #{user_num}, #{community_bno}, #{comment_writer})
+    </insert>
+
+    <update id="updateComment" parameterType="org.spring.domain.community.CommunityCommentDTO">
+        UPDATE community_comment
+        SET community_com_content = #{community_com_content}
+        WHERE community_cno = #{community_cno}
+    </update>
+
+    <delete id="deleteComment" parameterType="int">
+        DELETE FROM community_comment
+        WHERE community_cno = #{community_cno}
+    </delete>
+
+    <select id="getCommentById" parameterType="int" resultType="org.spring.domain.community.CommunityCommentDTO">
+        SELECT * FROM community_comment
+        WHERE community_cno = #{community_cno}
+    </select>
+    
+    <select id="getCommentsByBoardId" parameterType="int" resultType="org.spring.domain.community.CommunityCommentDTO"> <!-- 추가 -->
+        SELECT * FROM community_comment
+        WHERE community_bno = #{community_bno}
+    </select>
+    
+    <select id="getCommentCno" parameterType="int">
+    	SELECT * FROM community_comment WHERE user_num = #{user_num}
+    </select>
+</mapper>
