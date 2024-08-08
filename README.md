@@ -1,7 +1,12 @@
 # Neighborhood 26
 
-![Neighborhood 26 배너](https://your-image-url.com/banner.png)
-
+<img src="https://img.shields.io/badge/Project-2088FF?style=for-the-badge&logo=GitHub Actions&logoColor=white">
+<div>
+        <a href="https://github.com/dlawlghks202/Team_E1I4">
+             <img src="https://img.shields.io/badge/동네26-2088FF?style=for-the-badge&logo=GitHub Actions&logoColor=white">
+        </a>
+   </div>
+<span>서울시(구)민들을 위한 정보 공유 웹 플랫폼</span>
 ## 목차
 - [주제 선택 이유](#주제-선택-이유)
 - [기능](#기능)
