@@ -26,11 +26,8 @@
 - **응용 프로그램 개발**: 공공 행정, 의료, 재난 안전, 산업 고용 등 다양한 분야에 솔루션 제공
 - **사용자 인터페이스**: 직관적이고 사용하기 쉬운 UI/UX 디자인
 
-## 설치
-프로젝트를 로컬 환경에 설정하는 방법은 다음과 같습니다:
-```bash
+
 # 리포지토리 클론
 git clone https://github.com/yourusername/repository.git
 
-# 프로젝트 디렉토리로 이동
-cd repository
+
