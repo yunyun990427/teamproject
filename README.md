@@ -1,4 +1,3 @@
-![image](https://github.com/user-attachments/assets/38c84234-4d24-47b3-a2e4-fe36532fb063)
 # 동네26
 
 
