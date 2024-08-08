@@ -1,4 +1,6 @@
-# Neighborhood 26
+<div align= "center">
+    <img src="https://capsule-render.vercel.app/api?type=rounded&color=gradient&height=180&text=동네26&animation=&fontColor=ffffff&fontSize=50" />
+    </div>
 
 <img src="https://img.shields.io/badge/Project-2088FF?style=for-the-badge&logo=GitHub Actions&logoColor=white">
 <div>
@@ -32,9 +34,7 @@ git clone https://github.com/yourusername/repository.git
 
 [동네26.pdf](https://github.com/user-attachments/files/16539887/26.pdf)
 
-<div align= "center">
-    <img src="https://capsule-render.vercel.app/api?type=rounded&color=gradient&height=180&text=동네26&animation=&fontColor=ffffff&fontSize=50" />
-    </div>
+
     <div style="text-align: left;"> 
     <h2 style="border-bottom: 1px solid #d8dee4; color: #282d33;">  </h2>  
     <div style="font-weight: 700; font-size: 15px; text-align: left; color: #282d33;">  </div> 
