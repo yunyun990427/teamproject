@@ -34,7 +34,7 @@ git clone https://github.com/yourusername/repository.git
 
 [동네26.pdf](https://github.com/user-attachments/files/16539887/26.pdf)
 
-
+<div>
     <div style="text-align: left;"> 
     <h2 style="border-bottom: 1px solid #d8dee4; color: #282d33;">  </h2>  
     <div style="font-weight: 700; font-size: 15px; text-align: left; color: #282d33;">  </div> 
