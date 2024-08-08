@@ -30,4 +30,5 @@
 # 리포지토리 클론
 git clone https://github.com/yourusername/repository.git
 
+[동네26.pdf](https://github.com/user-attachments/files/16539887/26.pdf)
 
