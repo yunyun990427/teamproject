@@ -34,8 +34,4 @@ git clone https://github.com/yourusername/repository.git
 # 프로젝트 디렉토리로 이동
 cd repository
 
-# 종속성 설치
-npm install
 
-# 애플리케이션 시작
-npm start
